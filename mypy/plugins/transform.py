@@ -16,7 +16,7 @@ from mypy.nodes import (
 from mypy.plugins.common import add_method_to_class
 
 
-transform_names = {"transform.Transform", "Transform"}
+transform_makers = {"transform.transform.Transform", }
 
 
 class LookupMemberError(RuntimeError):
@@ -91,7 +91,20 @@ def transform_class_maker_callback(
     if isinstance(attribute_type_node, FuncDef):
         # This is a free standing function
         # Get the attribute type from the return value
-        attribute_type_node = attribute_type_node.type.ret_type.type
+        import pdb
+        ret_type = attribute_type_node.type.ret_type
+
+        if isinstance(ret_type, mypy.types.Instance):
+            attribute_type_node = attribute_type_node.type.ret_type.type
+        elif isinstance(ret_type, mypy.types.UnboundType):
+            if not context.api.final_iteration:
+                # wait until the type has been fully analyzed.
+                context.api.defer()
+                return
+
+            print("Unable to find return type")
+            pdb.set_trace()
+            return
 
     if not isinstance(attribute_type_node, TypeInfo):
         # Unable to determine the attribute type.
