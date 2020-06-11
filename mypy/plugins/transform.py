@@ -103,7 +103,10 @@ def transform_class_maker_callback(
 
             # How is the ret_type still UnboundType?
             # Is this a bug?
-            print("Unable to find return type. Prefer a class or a classmethod")
+            print(
+                "Unable to find return type for {}. "
+                "Prefer a class or a classmethod".format(
+                    attribute_type_node.name))
             return
 
     if not isinstance(attribute_type_node, TypeInfo):
