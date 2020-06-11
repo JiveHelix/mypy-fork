@@ -93,6 +93,7 @@ class DefaultPlugin(Plugin):
                                  ) -> Optional[Callable[[ClassDefContext], None]]:
         from mypy.plugins import attrs
         from mypy.plugins import dataclasses
+        from mypy.plugins import transform
 
         if fullname in attrs.attr_class_makers:
             return attrs.attr_class_maker_callback
@@ -103,6 +104,8 @@ class DefaultPlugin(Plugin):
             )
         elif fullname in dataclasses.dataclass_makers:
             return dataclasses.dataclass_class_maker_callback
+        elif fullname in transform.transform_makers:
+            return transform.transform_class_maker_callback
         return None
 
 
