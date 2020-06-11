@@ -91,7 +91,6 @@ def transform_class_maker_callback(
     if isinstance(attribute_type_node, FuncDef):
         # This is a free standing function
         # Get the attribute type from the return value
-        import pdb
         ret_type = attribute_type_node.type.ret_type
 
         if isinstance(ret_type, mypy.types.Instance):
@@ -102,8 +101,9 @@ def transform_class_maker_callback(
                 context.api.defer()
                 return
 
-            print("Unable to find return type")
-            pdb.set_trace()
+            # How is the ret_type still UnboundType?
+            # Is this a bug?
+            print("Unable to find return type. Prefer a class or a classmethod")
             return
 
     if not isinstance(attribute_type_node, TypeInfo):
